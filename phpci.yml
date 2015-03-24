@@ -1,31 +1,27 @@
 build_settings:
-  verbose: false
-  ignore:
-    - "vendor"
-    - "Tests"
-    - "PHPCI/Command" # PHPMD complains about un-used parameters, but they are required.
-    - "public/install.php" # PHPCS really doesn't like PHP mixed with HTML (and so it shouldn't)
-    - "PHPCI/Migrations" # Ignore the migrations directory, as both PHPMD and PHPCS can't cope with them.
-    - "PHPCI/Model/Base" # These files are auto-generated, and sometimes hit PHPMD complexity thresholds.
-    - "PHPCI/Languages" # PHPCS fails on character counts for non-Latin languages
-
+    ignore:
+        - "vendor"
+        - "bin"
+        - "app"
+ 
 setup:
-  composer:
-    action: "install"
-    prefer_dist: false
-
+    composer:
+        action: "install"
+ 
 test:
-  php_mess_detector:
-    allowed_warnings: 0
-  php_code_sniffer:
-    standard: "PSR2"
-    allowed_warnings: 0
-    allowed_errors: 0
-  php_loc:
-  php_unit:
-  php_docblock_checker:
-    allowed_warnings: 0
-
-failure:
-  email:
-    cc: ["wouter.adem@gmail.com"]
+    php_unit:
+        config:
+            - "app/phpunit.xml.dist"
+        coverage: "coverage"
+        args: "--stderr"
+    php_mess_detector:
+        allow_failures: true
+    php_code_sniffer:
+        standard: "PSR2"
+    php_cpd:
+        allow_failures: true
+    php_docblock_checker:
+        allowed_warnings: 10
+        skip_classes: true
+    php_loc:
+        directory: "src"
